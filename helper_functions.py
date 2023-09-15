@@ -32,7 +32,7 @@ def load_and_prep_image(filename, img_shape=224, scale=True):
 import itertools
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 
 # Our function needs a different name to sklearn's plot_confusion_matrix
 def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15, norm=False, savefig=False): 
@@ -286,3 +286,18 @@ def calculate_results(y_true, y_pred):
                   "recall": model_recall,
                   "f1": model_f1}
   return model_results
+
+def print_evaluation_metrics(y_pred, y_test):
+    """
+    Prints classification report and confusion matrix
+    for model predictions
+    """
+    print("Confusion matrix: ", confusion_matrix(y_test, y_pred))
+    model_results = classification_report(y_test, y_pred, output_dict=True)
+    accuracy = model_results['accuracy']
+    class_1_metrics = model_results['1']
+    model_results_final = {'accuracy': accuracy,
+                           'precision': class_1_metrics['precision'],
+                           'recall': class_1_metrics['recall'],
+                           'f1-score': class_1_metrics['f1-score']}
+    return model_results_final
